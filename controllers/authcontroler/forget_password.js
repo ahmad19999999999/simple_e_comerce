@@ -18,10 +18,10 @@ forgetpassword:  async (req, res) => {
       // Generate a password reset token
       const token = generateToken.generateToken();
   
-      // Update the user's reset token and expiration date in the database
-      // user.resetToken = token;
-      // user.resetTokenExpiresAt = Date.now() + 3600000; // Token expires in 1 hour
-      // await user.save();
+      //Update the user's reset token and expiration date in the database
+      user.resetToken = token;
+     // user.resetTokenExpiresAt = Date.now() + 3600000; // Token expires in 1 hour
+      await user.save();
   
       // Send the password reset email
       await sendResetEmail(user.email, token);

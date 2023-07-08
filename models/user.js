@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         password: DataTypes.STRING,
         phone:DataTypes.STRING,
         type_user:DataTypes.INTEGER ,
-        status:DataTypes.BOOLEAN  
+        status:DataTypes.BOOLEAN ,
+        resetToken:DataTypes.STRING
     },
     
     {

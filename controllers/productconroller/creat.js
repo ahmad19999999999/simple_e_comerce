@@ -15,7 +15,7 @@ module.exports = {
   create: async (req, res) => {
     try {
       const { name, slug, description, quantity, price, status, categoryIds } = req.body;
-      const imagePath = req.file.path;
+      const imageFilename = req.file.filename;
     
   
       const fetchedCategories = await Categories.findAll({ where: { id: categoryIds } });
@@ -30,9 +30,9 @@ module.exports = {
         description,
         quantity,
         price,
-        image: imagePath,
+        image:imageFilename,
         status,
-        categoryId: categoryIds
+        categoryId:categoryIds
       });
   
       res.status(201).json(product);

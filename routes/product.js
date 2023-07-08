@@ -6,10 +6,11 @@ const uploads = require('../midelware/upload');
 const router = express.Router();
 
 
-  
-  
 
-router.post('/',[auth],uploads.single('image'),controler.productconroller.creat.create);
+
+
+router.post('/', uploads.single('image'), controler.productconroller.creat.create);
+router.get('/alert', controler.productconroller.alert_produdct.alert);
 router.get('/:id', controler.productconroller.read.read);
 router.delete('/:id', controler.productconroller.delete.delete);
 router.put('/:id', controler.productconroller.update.update);

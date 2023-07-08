@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+
 const { models: { Product } } = require('../../models');
 
 module.exports = {
@@ -13,21 +12,12 @@ module.exports = {
           message: "Product with that ID not found or image path not available",
         });
       }
+      const imagePath = `${req.protocol}://${req.get('host')}/uploads/product/image/${product.image}`;
+      const productWithImagePath = { ...product.toJSON(), imagePath };
+  
+      return res.status(200).json({ product: productWithImagePath });
 
-      // const imagePath = product.image;
-
-      // Check if the image file exists
-      // if (!fs.existsSync(imagePath)) {
-      //   return res.status(404).json({
-      //     status: "fail",
-      //     message: "Image not found",
-      //   });
-      // }
-
-
-      // Send the image file as the response
-//fs.createReadStream(imagePath).pipe(res);
-res.send(product);
+    
     } catch (error) {
       res.status(500).json({
         status: "error",

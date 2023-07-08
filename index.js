@@ -25,7 +25,7 @@ app.use('/user',user);
 app.use('/categories',categories);
 app.use('/client',client);
 app.use('/setting', setting);
-app.use('/product', product );
+app.use('/products', product );
 app.use('/order', order);
 app.use('/orders', orders);
 app.use('/auth',auth);
