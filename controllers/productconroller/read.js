@@ -12,6 +12,9 @@ module.exports = {
           message: "Product with that ID not found or image path not available",
         });
       }
+      if(product.status==false){
+        return res.status(404).send('product is not visible');
+      }
       const imagePath = `${req.protocol}://${req.get('host')}/uploads/product/image/${product.image}`;
       const productWithImagePath = { ...product.toJSON(), imagePath };
   

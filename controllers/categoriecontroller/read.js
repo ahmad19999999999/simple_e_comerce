@@ -13,7 +13,10 @@ read:  async (req, res) => {
         });
       }
   
-      res.status(200).json(categorie);  
+      const imagePath = `${req.protocol}://${req.get('host')}/uploads/product/image/${categorie.image}`;
+      const categorieWithImagePath = { ...categorie.toJSON(), imagePath };
+  
+      return res.status(200).json({ categorie: categorieWithImagePath });
       
     } catch (error) {
       res.status(500).json({

@@ -1,6 +1,7 @@
 
 const { models: { Categories } } = require('../../models');
- const sharp = require('sharp');
+const validationSchema = require('../../validation/categorie');
+ 
  
 
 
@@ -9,22 +10,24 @@ create: async (req, res) => {
         try {
     
           
-           const { name, slug, image, status } = req.body;
+           const { name, slug, status } = req.body;
         
-     
+           const imageFilename = req.file.filename;
+           
+           const { error } = validationSchema.validate(req.body);
+
+      if (error) {
+        // Handle validation error
+        return res.status(400).json({ error: error.details[0].message });
+      }
+
     
-           const { buffer } = req.file;
-           const compressedImage = await sharp(buffer)
-             .resize(640, 480)
-            .jpeg({ quality: 50 })
-           .toBuffer();
-    
+           
        const categories = await Categories.create({
              name,
              slug,
-             image: compressedImage,
+             image:imageFilename,
             status
-    
     
     });
     

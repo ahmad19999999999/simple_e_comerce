@@ -1,12 +1,12 @@
 
-const { models: { Orders } } = require('../../models');
+const { models: {Orders} } = require('../../models');
 
 module.exports = {
 update: async (req, res) => {
     
     try {
       const result = await Orders.update(
-        {
+       req.body, {
           where: {id: req.params.id,},
         }
       );

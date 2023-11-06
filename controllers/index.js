@@ -8,4 +8,5 @@ controllers.productconroller= require('./productconroller');
 controllers.ordercontrller = require('./ordercontrller');
 controllers.order_productcontroller = require('./order_productcontroller');
 controllers.authcontroler= require('./authcontroler');
+controllers.couponcontroller=require('./coupon_controler');
 module.exports = controllers;

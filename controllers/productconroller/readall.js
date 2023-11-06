@@ -46,7 +46,12 @@ readall:  async (req, res) => {
       offset: offset,
       include:Categories ,
     });
-    res.json(products);
+    const imagePath = `${req.protocol}://${req.get('host')}/uploads/product/image/${products.image}`;
+    const productWithImagePath = { ...products.toJSON(), imagePath };
+
+    return res.status(200).json({products:productWithImagePath});
+
+   
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

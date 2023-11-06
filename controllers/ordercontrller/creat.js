@@ -3,9 +3,12 @@ const { models: { Orders } } = require('../../models');
 const { models: { Product } } = require('../../models');
 const { models: { Client } } = require('../../models');
 const { models: { Order_item } } = require('../../models');
+const { models: {Coupons } } = require('../../models');
 const generateOrderNumber = require('../../utils/order_number');
 const { sequelize } = require('../../models');
-const orderTransoform = require('../../transfrom/order')
+const orderTransoform = require('../../transfrom/order');
+const validationSchema = require('../../validation/order');
+
 //
 module.exports = {
   //
@@ -13,7 +16,7 @@ module.exports = {
     //
     try {
       //
-      const { client, products } = req.body;
+      const { client,products} = req.body;
       //
       await sequelize.transaction(async (t) => {
         //
@@ -29,38 +32,67 @@ module.exports = {
           const productData = products.find(p => p.id === product.id);
           //
           order_total += productData.quantity * product.price;
+          
+    
         });
 
-        if (client) {
+    
+       
+
           //
           fetchClient = await Client.create(client,
             { transaction: t }
           );
+        
+        //
+      
+    
+       const couponcod=await Coupons.findOne({where:{couponcode:req.body.couponcode}});
+        if (!couponcod) {
+          return res.status(400).json({ message: 'Invalid coupon code.' });
         }
+        const currentDate = new Date();
+        if (currentDate < couponcod.startdate || currentDate > couponcod.enddate) {
+          return res.status(400).json({ error: 'Coupon is not valid at this time' });
+        }
+        
+        
+        order_total=(1-couponcod.persantage)*order_total;
+    
+       
+        const { order_note, type_delivery, delivery_charge,status } = req.body;
         //
-        const { order_note, type_delivery, delivery_charge } = req.body;
+        
         //
+        const { error } =validationSchema.validate(req.body);
+
+        if (error) {
+          // Validation failed
+          return res.status(400).json({ error: error.details[0].message });
+        }
         const order_number = generateOrderNumber();
-        //
         const order = await Orders.create({
           order_number,
           order_total,
           order_note,
           type_delivery,
           delivery_charge,
-          clienId: fetchClient.id
+          status,
+          ClientId: fetchClient.id,
+          CouponId: couponcod.id ? couponcod.id : null
+        
         },
           { transaction: t }
         );
-        //
+        await order.save();
         for (const product of fetchedProducts) {
           //
           await Order_item.create(
             {
-              orderId: order.id,
-              productId: product.id,
-              quantity: product.quantity,
-              price: product.price
+              OrderId:order.id,
+              ProductId:product.id,
+              quantity:product.quantity,
+              price:product.price
             },
             { transaction: t }
           );

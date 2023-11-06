@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 
-router.post('/', uploads.single('image'), controler.productconroller.creat.create);
+router.post('/:folderName', uploads.single('image'), controler.productconroller.creat.create);
 router.get('/alert', controler.productconroller.alert_produdct.alert);
 router.get('/:id', controler.productconroller.read.read);
 router.delete('/:id', controler.productconroller.delete.delete);

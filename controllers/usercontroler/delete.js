@@ -5,8 +5,9 @@ module.exports = {
 delete:async (req, res) => {
        
     try {
+      const userId = req.params.id
       const result = await User.destroy({
-        where: { id: req.params.id }
+        where: { userId }
         
       });
   

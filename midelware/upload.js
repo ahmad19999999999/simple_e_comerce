@@ -1,18 +1,28 @@
-const multer = require('multer');
-const path = require('path');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/product/image'); // Set the destination folder for uploaded product images
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const extension = path.extname(file.originalname);
-      cb(null, file.fieldname + '-' + uniqueSuffix + extension); // Generate a unique filename for each uploaded file
-    },
-  });
-  
-  // Configure multer upload
-  const uploads = multer({ storage });
 
-  module.exports=uploads ;
-  
+const multer = require('multer');
+const fs = require('fs-extra');
+const path = require('path');
+
+
+// Define storage configuration for Multer
+const storage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    const folderName = req.params.folderName;
+    const destination = `uploads/${folderName}`;
+
+    // Create the destination directory if it doesn't exist
+    
+    //await fs.ensureDir(destination);
+
+    cb(null,destination);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + extension);
+  },
+});
+
+const uploads = multer({ storage });
+
+module.exports = uploads;
